@@ -55,23 +55,39 @@ CHIP ALU {
     Not16(in= zeroXorX , out=notXorTrueX);
     Mux16(a= zeroXorX, b= notXorTrueX, sel= nx, out= finalX);
 
+    // Same like x goes for Y
     Mux16(a= y, b[0..15]= false, sel= zy, out= zeroYorY);
     Not16(in= zeroYorY , out=notYorTrueY);
     Mux16(a= zeroYorY, b= notYorTrueY, sel= ny, out= finalY);
 
+    // Now to implement if (f == 1)  sets out = x + y  // integer 2's complement addition
+    // if (f == 0)  sets out = x & y  // bitwise and 
+    // first we add finalX and finalY
+    // then operating bitwise adn on the same and store
+    // based on the f value choose addition or and operation
     Add16(a = finalX, b = finalY, out = fXaddfY);
     And16(a= finalX, b= finalY, out= fXandfY);
     Mux16(a= fXandfY, b= fXaddfY, sel= f, out= finalFunctionOnXY);
 
+    // Now we nee to change final output based on the no value
+    // We splitted the output in two varibales to operate 16 bit or 
+    // Since in project one we didn't have this feature so I implemented with Or8Way
     Not16(in= finalFunctionOnXY, out= notOfFinalFunctiononXY);
     Mux16(a= finalFunctionOnXY, b= notOfFinalFunctiononXY, sel= no, out[0..7]= outReady1, out[8..15] = outReady2);
     Mux16(a= finalFunctionOnXY, b= notOfFinalFunctiononXY, sel= no, out= outReady);
 
+    //We implemented this logic to give the zr value out put which is 1 when (out == 0) , else 0 
     Or8Way(in= outReady1, out= or1To8);
     Or8Way(in= outReady2, out= or9To16);
     Or(a= or1To8, b= or9To16, out= or1To16);
     Not(in= or1To16, out= zr);
 
+    // And finally I implemented this to find out the last bit value  
+    // if last bit value is 1 that indicate the value is -ve so ng indicates 1
     And16(a[0..15]= true, b=outReady , out[15]=ng,out[0..14]=drop );
+
+    // Since we can not use out pin as input 
+    // that's why we stored the final output in outReady and 
+    // finally we done 16bit Or function with 16 bit false value to preserve the final output.
     Or16(a= outReady, b[0..15]= false, out= out);
 }
