@@ -11,5 +11,9 @@ CHIP And {
     OUT out;
     
     PARTS:
-    //// Replace this comment with your code.
+    // AND implementation using NAND
+    // x = (a NAND b)
+    // out = NAND(x)
+    Nand(a= a, b= b, out= x);
+    Nand(a= x, b= x, out= out);
 }

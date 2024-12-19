@@ -11,5 +11,27 @@ CHIP Xor {
     OUT out;
 
     PARTS:
-    //// Replace this comment with your code.
+    // XOR using NAND
+    // x = b NAND b
+    // y = a NAND x
+    // z = y NAND y
+    // The above three steps are for (a and Not(b)) Let's say A
+    // p = a NAND a
+    // q = p NAND b
+    // r = q NAND q
+    // These above three steps are for (Not(a) and b) Let's say B
+    // s = z NAND z
+    // t = r NAND r
+    // result = s NAND t
+    // These above three steps are for calculating XOR
+    // e.i (A or B)
+    Nand(a= b, b= b, out= x);
+    Nand(a= a, b= x, out= y);
+    Nand(a= y, b= y, out= z);
+    Nand(a= a, b= a, out= p);
+    Nand(a= p, b= b, out= q);
+    Nand(a= q, b= q, out= r);
+    Nand(a= z, b= z, out= s);
+    Nand(a= r, b= r, out= t);
+    Nand(a= s, b= t, out= out);
 }

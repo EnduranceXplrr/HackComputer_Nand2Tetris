@@ -20,5 +20,9 @@ CHIP Mux8Way16 {
     OUT out[16];
 
     PARTS:
-    //// Replace this comment with your code.
+    // The same way we used for mux4Way16 we used for mux8Way16
+    // divide into two parts and then pass through one mux16 to get the combined result
+    Mux4Way16(a= a, b= b, c= c, d= d, sel= sel[0..1], out= mux4Way16To1);
+    Mux4Way16(a= e, b= f, c= g, d= h, sel= sel[0..1], out= mux4Way16To2);
+    Mux16(a= mux4Way16To1, b= mux4Way16To2, sel= sel[2], out= out);
 }

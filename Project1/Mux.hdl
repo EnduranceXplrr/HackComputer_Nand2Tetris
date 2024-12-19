@@ -11,5 +11,14 @@ CHIP Mux {
     OUT out;
 
     PARTS:
-    //// Replace this comment with your code.
+    // Mux using NAND only as
+    // (Not(sel) Nand a) NAND ( sel Nand b)
+    // selN = sel NAND sel
+    // res1 = selN NAND a
+    // res2 = sel NAND b
+    // result = res1 NAND res2
+    Nand(a= sel, b= sel, out= selN);
+    Nand(a= a, b= selN, out= res1);
+    Nand(a= sel, b= b, out= res2);
+    Nand(a= res1, b= res2, out= out);
 }

@@ -11,5 +11,7 @@ CHIP Not {
     OUT out;
 
     PARTS:
-    //// Replace this comment with your code.
+    // Not using Nand Gate
+    // (a NAND a) = NOT(a)
+    Nand(a = in, b= in,out= out );
 }

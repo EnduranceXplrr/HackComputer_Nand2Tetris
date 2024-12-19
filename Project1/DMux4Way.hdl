@@ -14,5 +14,10 @@ CHIP DMux4Way {
     OUT a, b, c, d;
 
     PARTS:
-    //// Replace this comment with your code.
+    // Since we know Dmux is working on the opposite of Mux
+    // We can use the same concept of Mux4To16 just in reverse order
+    // Bingo its worked
+    DMux(in= in, sel= sel[1], a= ab, b= cd);
+    DMux(in= ab, sel= sel[0], a= a, b= b);
+    DMux(in= cd, sel= sel[0], a= c, b= d);
 }
