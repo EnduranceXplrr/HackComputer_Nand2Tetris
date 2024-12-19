@@ -11,5 +11,12 @@ CHIP FullAdder {
         carry;   // Left bit of a + b + c
 
     PARTS:
-    //// Replace this comment with your code.
+    // we know that we can design the full adder using half adder
+    // a HalfAdder b = ASumB, ACarryB
+    //  ASumB HalfAdder C = FinalSum, ABCarryC
+    // finally pass ACarryB and ABCarryC to a or to get the overall carry
+    // ABCarry OR ACarryB = Carry
+    HalfAdder(a= a, b= b, sum= AsumB, carry= AcarryB);
+    HalfAdder(a= AsumB, b= c, sum= sum, carry= ABcarryC);
+    Or(a= AcarryB, b= ABcarryC, out= carry);
 }

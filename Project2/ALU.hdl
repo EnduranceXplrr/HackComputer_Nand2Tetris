@@ -41,5 +41,37 @@ CHIP ALU {
         ng;      // if (out < 0)  equals 1, else 0
 
     PARTS:
-    //// Replace this comment with your code.
+    // As we know that
+    // 16-bit multiplexer (mux) can 
+    //select either input 1 or input 2 based on the selector provided
+    // Then we negatiate the output from mux and agagin use mux to choose either
+    // to select the final x 
+    // Mux16(x,false,sel=0)=> x =>muxOutX
+    // Mux16(x,false,sel=1)=> [00000000000000] =>muxOutX
+    //not(muxOutX)=> !muxOutX it can be [11111111111111]
+    // or !x and store in notMuxOutX then
+    // muxOutX and notmuxOutXcan be select based on nx
+    Mux16(a= x, b[0..15]= false, sel= zx, out= zeroXorX);
+    Not16(in= zeroXorX , out=notXorTrueX);
+    Mux16(a= zeroXorX, b= notXorTrueX, sel= nx, out= finalX);
+
+    Mux16(a= y, b[0..15]= false, sel= zy, out= zeroYorY);
+    Not16(in= zeroYorY , out=notYorTrueY);
+    Mux16(a= zeroYorY, b= notYorTrueY, sel= ny, out= finalY);
+
+    Add16(a = finalX, b = finalY, out = fXaddfY);
+    And16(a= finalX, b= finalY, out= fXandfY);
+    Mux16(a= fXandfY, b= fXaddfY, sel= f, out= finalFunctionOnXY);
+
+    Not16(in= finalFunctionOnXY, out= notOfFinalFunctiononXY);
+    Mux16(a= finalFunctionOnXY, b= notOfFinalFunctiononXY, sel= no, out[0..7]= outReady1, out[8..15] = outReady2);
+    Mux16(a= finalFunctionOnXY, b= notOfFinalFunctiononXY, sel= no, out= outReady);
+
+    Or8Way(in= outReady1, out= or1To8);
+    Or8Way(in= outReady2, out= or9To16);
+    Or(a= or1To8, b= or9To16, out= or1To16);
+    Not(in= or1To16, out= zr);
+
+    And16(a[0..15]= true, b=outReady , out[15]=ng,out[0..14]=drop );
+    Or16(a= outReady, b[0..15]= false, out= out);
 }

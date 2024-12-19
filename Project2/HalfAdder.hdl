@@ -11,5 +11,10 @@ CHIP HalfAdder {
         carry;  // Left bit of a + b
 
     PARTS:
-    //// Replace this comment with your code.
+    // As we know that one bit half adder can be simply desined
+    // using xor and and gate
+    // like a XOR b = Sum
+    // and a AND b = Carry
+    Xor(a = a, b = b, out = sum);
+    And(a= a, b= b, out= carry);
 }
